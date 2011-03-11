@@ -1,0 +1,19 @@
+#! /bin/sh
+
+if [ "$SPKG_LOCAL" = "" ]; then
+   echo "SPKG_LOCAL undefined ... exiting";
+   echo "Maybe run 'qsnake --shell'?"
+   exit 1
+fi
+
+set -e
+
+export LDFLAGS="${LDFLAGS} -shared"
+
+echo "[DEFAULT]" > site.cfg
+echo "library_dirs = $SPKG_LOCAL/lib" >> site.cfg
+echo "include_dirs = $SPKG_LOCAL/include" >> site.cfg
+echo "" >> site.cfg
+
+rm -rf "$SPKG_LOCAL"/lib/python/site-packages/numpy
+python setup.py install
